@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="js/jquery-3.4.1.js"></script>
+    <style>
+        body {
+            position: relative;
+            text-align: center;
+            background-color: goldenrod;
+        }
+
+        #bk {
+            position: relative;
+            margin: 0px auto;
+            height: 495px;
+            width: 330px;
+            background-image: url('img/background.jpg');
+            background-repeat: no-repeat;
+            background-size: contain;
+        }
+
+        #wall_1 {
+            position: absolute;
+            width: 50%;
+            bottom: -25px;
+            left: -10px;
+            transform: rotate3d(1, 3, 2.5, -65deg);
+            pointer-events: none;
+        }
+
+        #wall_2 {
+            position: absolute;
+            width: 50%;
+            bottom: 150px;
+            left: 0px;
+            transform: rotate3d(1, 3, 2.5, -65deg);
+            pointer-events: none;
+        }
+
+        #dragon {
+            position: absolute;
+            width: 60px;
+            bottom: 130px;
+            left: 10px;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        #fire {
+            position: absolute;
+            width: 10%;
+            top: 280px;
+            left: 50px;
+        }
+
+        .monster {
+            visibility: hidden;
+            position: absolute;
+            pointer-events: none;
+        }
+
+        /* 結束呈現 */
+        /* 血量到底 */
+        #loser {
+            visibility: hidden;
+            position: absolute;
+            left: 15px;
+            top: 30px;
+            width: 90%;
+            background-color: rgb(219, 70, 100);
+            opacity: 60%;
+            z-index: 1;
+        }
+
+        #winner {
+            visibility: hidden;
+            position: absolute;
+            left: 0px;
+            top: 120px;
+            width: 100%;
+            background-color: moccasin;
+            opacity: 60%;
+            z-index: 1;
+        }
+
+        #total {
+            position: absolute;
+            color: rgba(231, 43, 184, 0.979);
+            top: 360px;
+            z-index: 2;
+            background-color: lightgrey;
+            pointer-events: none;
+        }
+
+        #tt {
+            position: absolute;
+            left: 30px;
+            top: 10px;
+            width: 270px;
+            color:yellow;
+            background-color: cyan;
+            text-shadow: 2px 8px 6px rgba(0, 0, 0, 0.2),
+                0px -5px 35px rgba(255, 255, 255, 0.3);
+            border-radius: 10px;
+        }
+
+        #HPtable {
+            position: absolute;
+            right: 10px;
+            top: 90px;
+            background-color: ghostwhite;
+            border-radius: 6px;
+            border-color: hotpink;
+            border-width: 20px;
+        }
+        #tabT{
+            position: absolute;
+            right: 5px;
+            top: 71px;
+            width: 115px;
+            height: 30px;
+            text-align: left;
+            color:mediumpurple;
+            background-color:lightyellow;
+            border-radius: 5px;
+        }
+
+        td {
+            background-color: hotpink;
+            border-radius: 3px;
+        }
+
+        #totalMon {
+            position: absolute;
+            color: rgba(231, 43, 184, 0.979);
+            top: 415px;
+            right: 0px;
+            z-index: 2;
+            background-color: lightgrey;
+            pointer-events: none;
+        }
+
+        /* 怪物圖片可出現定位 */
+        #m1 {
+            /* 怪物最高及起始點位置    */
+            position: absolute;
+            visibility: hidden;
+            top: 200px;
+            left: 280px;
+            background-color: blue;
+            height: 50px;
+        }
+
+        #m4 {
+            /* 怪物最低最遠位置    */
+            position: absolute;
+            top: 440px;
+            left: 60px;
+            height: 50px;
+        }
+    </style>
+</head>
+
+<body>
+    <div id='bk'>
+        <img id='wall_1' src="img/wall.png" alt="">
+        <img id='wall_2' src="img/wall.png" alt="">
+        <img id='dragon' src="img/004.png" alt="">
+        <img id='loser' src="img/loser.png" alt="">
+        <img id='winner' src="img/Winner.png" alt="">
+
+        <h1 id='total'></h1>
+        <h1 id='totalMon'></h1>
+        <h1 id='tt'></h1>
+        <h3 id='tabT'>&nbspHP</h3>
+
+        <table id=HPtable>
+            <tr>
+                <td id=HP1>&nbsp&nbsp&nbsp&nbsp</td>
+                <td id=HP2>&nbsp&nbsp&nbsp&nbsp</td>
+                <td id=HP3>&nbsp&nbsp&nbsp&nbsp</td>
+                <td id=HP4>&nbsp&nbsp&nbsp&nbsp</td>
+            </tr>
+        </table>
+        <!-- <h1 id='hh'>00</h1> -->
+    </div>
+    <!-- <button>Start</button> -->
+    <script>
+        n = 0;
+        MonLvl = 1        //怪物等級
+        Maketime = 1000;  //怪物產生時間
+        HeroHP = 15         //主角血量
+        MHeroHP = HeroHP    //最大血量
+        lTime = 20      //關卡時間
+        monID = ''          //怪物名稱
+        MonTotal = 0     //怪物總分
+        mon_score = 0    //怪物計分
+        mN = 0             //怪物計數
+        fX = 0
+        fY = 0
+        $('#tt').text(`Excess Time : ${lTime}`);
+        // $('#hh').text(HeroHP);
+        //怪物產生
+        var MonMake = setInterval(function () {
+
+            var mon = 'm' + parseInt(Math.random() * 4 + 1);                //取得怪物編號
+            var mon_position = parseInt(Math.random() * 240 + 200) + 'px'      //設定怪物定位
+            var mon_Movetime = 0                                            //怪物移動時間
+            mon_score = 0                                                //怪物得分  
+            mon_Size = 0
+
+
+            mm = `#mon_Pic${n}`
+            $('#bk').append(`<img class='monster' id=mon_Pic${n} src='img/m1.png' alt=''>`)
+            $(mm).attr('src', `img/${mon}.png`)
+            $('#tt').text(`Excess Time : ${lTime = lTime - 1}`)
+            // $('#hh').text(HeroHP)
+            n = n + 1
+            //怪物參數設定
+            switch (mon) {
+                case 'm1':
+                    mon_Movetime = 4000
+                    mon_Size = 50 + 'px'
+                    mon_score = 1
+                    break;
+                case 'm2':
+                    mon_Movetime = 3000
+                    mon_Size = 50 + 'px'
+                    mon_score = 2
+                    break;
+                case 'm3':
+                    mon_Movetime = 2000
+                    mon_Size = 40 + 'px'
+                    mon_score = 5
+                    break;
+                case 'm4':
+                    mon_Movetime = 1000
+                    mon_Size = 70 + 'px'
+                    mon_score = 10
+                    break;
+            }
+            $(mm).css({
+                'top': mon_position,
+                'left': '280px',
+                'height': mon_Size,
+                'visibility': 'visible'
+            });
+            //怪物行走動畫
+            $(mm).animate({ left: '30px', }, mon_Movetime, function () {
+                monID = ('#' + $(this).attr('id'));
+                $(this).hide(100);
+            });
+
+            // console.log(monID)
+            costHP(monID);       //扣血機制確認
+
+            if (lTime <= 0 || HeroHP <= 0) {
+                DeadCheck();
+
+                if (HeroHP <= 0) {
+                    $('#loser').css('visibility', 'visible')
+                }
+                else {
+                    $('#winner').css('visibility', 'visible')
+                };
+            };
+
+        }, Maketime);
+        //扣血機制
+        function costHP(cHP) {
+            // console.log($(cHP).is(':hidden'))
+            if ($(cHP).is(':hidden')) {
+                HeroHP = HeroHP - 1
+                $('#hh').text(HeroHP);
+            }
+            //血量條換算
+            if (HeroHP <= (MHeroHP*0.75)) {
+                $('#HP4').css('background-color','lightgrey')
+            }
+            if (HeroHP <= MHeroHP*0.5) {
+                $('#HP3').css('background-color','lightgrey')
+            }
+            if (HeroHP <= MHeroHP*0.25) {
+                $('#HP2').css('background-color','lightgrey')
+            }
+            if (HeroHP == 0) {
+                $('#HP1').css('background-color','lightgrey')
+            }
+        }
+        //死亡機制
+        function DeadCheck(params) {
+            $('#dragon').remove();
+            $('#tt').remove();
+            $('#hh').remove();
+            $('#fire').remove();
+            $('table').remove();
+            $('#tabT').remove();
+            clearInterval(MonMake);
+            $('#total').text(`Score:${MonTotal}分`);
+            $('#totalMon').text(`Total Kill:${mN}`);
+            // windows.Alert("You Died!!!");
+        }
+
+
+        //重複判斷
+        function isOverlap(idOne, idTwo) {
+
+            var objOne = $("#" + idOne),
+                objTwo = $("#" + idTwo);
+            offsetOne = objOne.offset(),
+                offsetTwo = objTwo.offset();
+
+            topOne = offsetOne.top;
+            topTwo = offsetTwo.top,
+                leftOne = offsetOne.left,
+                leftTwo = offsetTwo.left,
+                widthOne = fX - 50,
+                widthTwo = objTwo.width(),
+                heightOne = objOne.height(),
+                heightTwo = objTwo.height();
+
+            // console.log(topOne, topTwo, leftOne, leftTwo)
+            // console.log(widthOne, widthTwo, heightOne, heightTwo)
+            var overlap = !(leftOne + widthOne < leftTwo || leftOne > leftTwo + widthTwo
+                || heightOne + topOne < topTwo || topOne > topTwo + heightTwo);
+            return overlap;
+        };
+        //噴火機制
+        $(document).click(function (event) {
+            var fmT = [];     //怪物座標上
+            var fmL = [];     //怪物座標左
+            var fmW = [];     //怪物寬度
+            var fmH = [];     //怪物高度
+            var fmI = [];     //怪物id
+            var elms = $('.monster').each(function () {
+                // var tttt =$(this).attr('id')
+                fmT.push($(this).offset().top);
+                fmL.push($(this).offset().left);
+                fmW.push($(this).outerWidth());
+                fmH.push($(this).outerHeight());
+                fmI.push($(this).attr('id'));
+                // console.log($(fmT[0]),$(fmL[0]));
+
+            });
+
+
+            $('#bk').append(`<img id='fire' src='img/fire.png' alt=''>`)
+            fX = event.clientX - $('#bk').offset().left;    //火焰座標左
+            fY = event.clientY - $('#bk').offset().top;     //火焰座標上
+            $('#fire').animate({ left: `${fX}px`, top: `${fY}px` }, 200, function () {
+
+                for (var i in fmT) {
+                    // console.log(fmI[i]);
+                    if (isOverlap('fire', fmI[i])) {
+                        // console.log(fmL[i])
+                        if (fmL[i] > 60) {
+                            $('#' + fmI[i]).remove();
+                            MonTotal = MonTotal + mon_score
+                            mN += 1
+                        }
+                    }
+                };
+                $(this).remove();
+            });
+        });
+        //進化機制
+        $(document).click(function () {
+            // console.log(MonTotal);
+            if (MonTotal > 10 && MonTotal < 30) {
+                // console.log(MonTotal);
+                $('#dragon').attr('src', `img/005.png`);
+                $('#dragon').width('80px');
+                $('#dragon').css('top', '280px');
+                $('#dragon').css('Left', '0px');
+            };
+            if (MonTotal >= 30) {
+                $('#dragon').attr('src', `img/006.png`);
+                $('#dragon').width('130px');
+                $('#dragon').css('top', '270px');
+                $('#dragon').css('Left', '0px');
+
+            }
+
+
+        });
+
+    </script>
+
+
+
+</body>
+
+</html>

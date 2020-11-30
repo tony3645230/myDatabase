@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="js/jquery-3.4.1.js"></script>
+    <style>
+        body {
+            position: relative;
+            background-color: goldenrod;
+        }
+
+        #bk {
+            position: relative;
+            margin: -40px auto;
+            height: 495px;
+            width: 330px;
+            background-image: url('img/background.jpg');
+            background-repeat: no-repeat;
+            background-size: contain;
+        }
+
+        #ttt {
+            text-align: center;
+            position: relative;
+            top: 70px;
+            left: 15px;
+            background-image: url("img/bkwall.jpg");
+            background-size: cover;
+            width: 90%;
+            border-radius: 10px;
+        }
+
+        #myTit1 {
+            position: relative;
+            top: 20px;
+            font-size: 50px;
+            background: -webkit-gradient (linear, left top, right top, from(#ff8a00), to(#da1b60));
+            background: linear-gradient(to right, #ff8a00, #da1b60);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            -webkit-box-decoration-break: clone;
+            box-decoration-break: clone;
+            text-shadow: none;
+            font-weight: 700;
+            
+        }
+
+        #myTit2 {
+            position: relative;
+            top: -30px;
+            font-size: 50px;
+            background-color: #666666;
+            -webkit-background-clip: text;
+            -moz-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            text-shadow: rgba(255, 255, 255, 0.5) 0px 3px 3px;
+        }
+        #Btn{
+            position: absolute;
+            top:300px ;
+            left:50px ;
+            width: 70%;
+        }
+        
+    </style>
+</head>
+
+<body>
+    <div id='bk'>
+        <div id='ttt'>
+            <p id=myTit1>噴火龍大戰</p>
+            <p id=myTit2>Kutar</p>
+        </div>
+        <img id=Btn src="img/start.png" alt="">
+    </div>
+    <script>
+        $('#Btn').click(function(){
+            $(window).attr('location','game.html').delay(1000)
+        })
+    </script>
+
+
+
+</body>
+
+</html>

@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        body {
+            background-color: darkcyan;
+            text-align: center;
+        }
+
+        #total {
+            background-color: lightslategrey;
+            width: 400px;
+            height: 420px;
+            padding: 3px;
+            border-radius: 10px;
+            margin: 15px auto;
+        }
+
+        #Ans {
+            width: 370px;
+            height: 100px;
+            background-color: lightgrey;
+            position: initial;
+            margin: 0px auto 15px auto;
+            text-align: end;
+            /* border-radius: 10px; */
+            font-size: 70px;
+        }
+
+        #AnsH {
+            width: 370px;
+            height: 10px;
+            background-color: lightgrey;
+            position: initial;
+            margin: 15px auto 0px auto;
+            text-align: end;
+            /* border-radius: 10px; */
+            font-size: 10px;
+        }
+
+        button {
+
+            padding: 20px 40px;
+            background-color: rgb(35, 37, 39);
+            width: 90px;
+            color: white;
+            font-size: 20px;
+            text-align: center;
+            border-radius: 10px;
+
+        }
+    </style>
+    <script src="jquery-3.4.1.js"></script>
+</head>
+
+<body>
+    <div id='total'>
+        <p id="AnsH"></p>
+        <p id='Ans'></p>
+        <div id='Btn'>
+            <button>9</button>
+            <button>8</button>
+            <button>7</button>
+            <button>X</button> <br>
+            <button>6</button>
+            <button>5</button>
+            <button>4</button>
+            <button>-</button> <br>
+            <button>3</button>
+            <button>2</button>
+            <button>1</button>
+            <button>+</button> <br>
+            <button>C</button>
+            <button>0</button>
+            <button>.</button>
+            <button>=</button>
+        </div>
+    </div>
+    <script>
+        var total = 0;
+        // console.log(4+5) ;
+
+
+        // $('p').innertext()='456'
+        $(function () {
+            $('button').click(calFuc);
+        })
+
+        function calFuc() {
+            var sKey = $('#Ans').text();
+            var sKey2 = '';
+            var intKey = '';
+            var check1 = '';
+            // window.moDul=''
+
+
+            //數值呈現
+
+
+            switch (this.innerText) {
+                case '+':
+                    intKey = parseInt($('#Ans').text());
+                    total = total + intKey;
+                    $('#AnsH').text($('#AnsH').text() + intKey + this.innerText);
+                    $('#Ans').text('');
+                    // window.moDul = 1; 無法設定全域變數
+                    break;
+                case '-':
+                    intKey = parseInt($('#Ans').text());
+                    if (total == 0) {
+                        total = total + intKey;
+                    } else {
+                        total = total - intKey;
+                    }
+                    $('#AnsH').text($('#AnsH').text() + intKey + this.innerText);
+                    $('#Ans').text('');
+                    // window.moDul = 1; 無法設定全域變數
+                    break;
+                case 'X':
+                    intKey = parseInt($('#Ans').text());
+                    if (total == 0) {
+                        total = total + intKey;
+                        console.log(total)
+                    } else {
+                        total = total * intKey;
+                        console.log(total)
+                    }
+                    $('#AnsH').text($('#AnsH').text() + intKey + 'x');
+                    $('#Ans').text('');
+                    // window.moDul = 1; 無法設定全域變數
+                    break;
+                case '/':
+                    intKey = parseInt($('#Ans').text());
+                    total = total / intKey;
+                    $('#AnsH').text($('#AnsH').text() + intKey + this.innerText);
+                    $('#Ans').text('');
+                    // window.moDul = 1; 無法設定全域變數
+                    break;
+                case '=':
+                    intKey = parseInt($('#Ans').text());
+                    check1 = $('#AnsH').text().substr($('#ansH').length - 1), 1
+                    console.log(check1)
+                    switch (check1) {
+                        case '+':
+                            $('#AnsH').text($('#AnsH').text() + intKey + this.innerText);
+                            $('#Ans').text(total + parseInt($('#Ans').text()));
+                            break;
+                        case '-':
+                            $('#AnsH').text($('#AnsH').text() + intKey + this.innerText);
+ 
+                            $('#Ans').text(total - parseInt($('#Ans').text()));
+                            break;
+                        case 'x':
+                            $('#AnsH').text($('#AnsH').text() + intKey + this.innerText);
+
+                            $('#Ans').text(total * parseInt($('#Ans').text()));
+                            break;
+                        case '/':
+                            $('#AnsH').text($('#AnsH').text() + intKey + this.innerText);
+
+                            $('#Ans').text(total / parseInt($('#Ans').text()));
+                            break;
+                    }
+                    total = 0;
+                    break;
+                case 'C':
+                    $('#Ans').text("");
+                    $('#AnsH').text("");
+                    total=0;
+                    break;
+                default:
+                    //無法使用全域變數
+                    // console.log(moDul);
+                    // if (moDul == 1) {
+                    //     $('#Ans').text('');
+                    //     $('#Ans').text(this.innerText);
+                    // } else {
+                    //     $('#Ans').text(sKey + this.innerText);
+                    // }
+                    
+                    if (total==0 && $('#AnsH').text()==""){
+                        $('#Ans').text(sKey + this.innerText);
+                    }else if(total!=0 ){
+                        $('#Ans').text(sKey + this.innerText);
+                    }else{
+                        $('#Ans').text('');
+                        $('#AnsH').text('');
+                        $('#Ans').text($('#Ans').text()+ this.innerText);
+                    }
+                    
+                    
+            }
+
+
+
+        }
+
+    </script>
+
+
+</body>
+
+</html>
